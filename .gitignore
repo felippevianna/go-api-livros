@@ -1,0 +1,33 @@
+# Binários compilados
+/main
+/app
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+
+# Pastas de ferramentas e IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Dependências (O Go baixa via go.mod, não precisamos da pasta vendor)
+vendor/
+
+# Docker
+.docker/
+# Ignora os dados persistidos do banco de dados na sua máquina local
+db_data/
+
+# Variáveis de ambiente (Contém senhas e chaves sensíveis)
+.env
+*.env
+
+# Logs
+*.log
+
+# Arquivos temporários do Sistema Operacional
+.DS_Store
+Thumbs.db

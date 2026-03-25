@@ -1,0 +1,42 @@
+version: '3.8'
+
+services:
+  go-api-livros:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: go_api_livros
+    ports:
+      - "8080:8080"
+    environment:
+      - DB_HOST=postgres_db
+      - DB_PORT=5432
+      - DB_USER=postgres
+      - DB_PASSWORD=admin
+      - DB_NAME=go_api_livros
+    depends_on:
+      - postgres_db
+    networks:
+      - go-network
+
+  postgres_db:
+    image: postgres:14-alpine
+    container_name: postgres_db_livros
+    restart: always
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=admin
+      - POSTGRES_DB=go_api_livros
+    ports:
+      - "5432:5432"
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    networks:
+      - go-network
+
+volumes:
+  db_data:
+
+networks:
+  go-network:
+    driver: bridge
