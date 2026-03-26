@@ -10,7 +10,7 @@ type Livro struct {
 	// Chave Estrangeira: Aponta para o ID do Autor
 	AutorID   uint      `gorm:"not null"`
 	// Propriedade de navegação: Permite ao GORM carregar os dados do Autor automaticamente
-	Autor     Autor     `gorm:"constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"`
+	Autor     Author     `gorm:"constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"`
 	
 	Publicado bool      `gorm:"default:false"`
 	CreatedAt time.Time

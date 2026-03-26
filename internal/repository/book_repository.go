@@ -25,34 +25,31 @@ func NewLivroRepository(db *gorm.DB) LivroRepository {
 	return &livroRepository{db: db}
 }
 
-// Create insere um novo livro no banco de dados.
 func (r *livroRepository) Create(livro *models.Livro) error {
 	return r.db.Create(livro).Error
 }
 
-// FindAll retorna todos os livros do banco de dados.
 func (r *livroRepository) FindAll() ([]models.Livro, error) {
 	var livros []models.Livro
-	err := r.db.Find(&livros).Error
+	// O nome dentro do Preload deve ser EXATAMENTE o nome do campo na struct Livro
+	err := r.db.Preload("Autor").Find(&livros).Error
 	return livros, err
 }
 
-// FindByID encontra um livro pelo seu ID.
 func (r *livroRepository) FindByID(id uint) (*models.Livro, error) {
 	var livro models.Livro
-	err := r.db.First(&livro, id).Error
+	// Buscam o autor junto com o livro específico
+	err := r.db.Preload("Autor").First(&livro, id).Error
 	if err != nil {
 		return nil, err
 	}
 	return &livro, nil
 }
 
-// Update salva as alterações em um livro existente.
 func (r *livroRepository) Update(livro *models.Livro) error {
 	return r.db.Save(livro).Error
 }
 
-// Delete remove um livro do banco de dados pelo seu ID.
 func (r *livroRepository) Delete(id uint) error {
 	return r.db.Delete(&models.Livro{}, id).Error
 }

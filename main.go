@@ -15,14 +15,20 @@ func main() {
 
 	// 2. Instancia o repositório
 	livroRepo := repository.NewLivroRepository(db)
+	authorRepo := repository.NewAuthorRepository(db)
 
 	// 3. Instancia o handler passando o repositório (Injeção de Dependência)
 	bookHandler := handlers.NewBookHandler(livroRepo)
+	authorHandler := handlers.NewAuthorHandler(authorRepo)
 
 	// 4. Configura o Gin
 	r := gin.Default()
 
-	// 5. Define as rotas
+	// Rotas de Autores
+	r.POST("/authors", authorHandler.CreateAuthor)
+	r.GET("/authors", authorHandler.GetAuthors)
+
+	// Rotas de Livros
 	r.POST("/books", bookHandler.CreateBook)
 	r.GET("/books", bookHandler.GetBooks)
 	r.GET("/books/:id", bookHandler.GetBookByID)

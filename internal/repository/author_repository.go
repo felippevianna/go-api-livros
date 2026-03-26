@@ -1,29 +1,29 @@
 package repository
 
 import (
-	"go-api-livros/internal/models"
+	"github.com/felippevianna/go-api-livros/internal/models"
 	"gorm.io/gorm"
 )
 
-type AutorRepository interface {
-	Create(autor *models.Autor) error
-	FindAll() ([]models.Autor, error)
+type AuthorRepository interface {
+	Create(author *models.Author) error
+	FindAll() ([]models.Author, error)
 }
 
-type autorRepository struct {
+type authorRepository struct {
 	db *gorm.DB
 }
 
-func NewAutorRepository(db *gorm.DB) AutorRepository {
-	return &autorRepository{db: db}
+func NewAuthorRepository(db *gorm.DB) AuthorRepository {
+	return &authorRepository{db: db}
 }
 
-func (r *autorRepository) Create(autor *models.Autor) error {
-	return r.db.Create(autor).Error
+func (r *authorRepository) Create(author *models.Author) error {
+	return r.db.Create(author).Error
 }
 
-func (r *autorRepository) FindAll() ([]models.Autor, error) {
-	var autores []models.Autor
+func (r *authorRepository) FindAll() ([]models.Author, error) {
+	var autores []models.Author
 	// Preloads: Carrega os livros do autor na mesma consulta (Opcional)
 	err := r.db.Preload("Livros").Find(&autores).Error
 	return autores, err

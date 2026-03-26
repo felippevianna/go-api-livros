@@ -2,7 +2,7 @@ package models
 
 import "time"
 
-type Autor struct {
+type Author struct {
 	ID           uint      `gorm:"primaryKey;autoIncrement"`
 	Nome         string    `gorm:"type:varchar(255);not null"`
 	Nacionalidade string    `gorm:"type:varchar(100)"`
