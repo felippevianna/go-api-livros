@@ -1,6 +1,9 @@
 package models
 
-import "time"
+import (
+	"time"
+	"gorm.io/gorm"
+)
 
 type Author struct {
 	ID           uint      `gorm:"primaryKey;autoIncrement"`
@@ -10,4 +13,6 @@ type Author struct {
 	Livros       []Livro   `gorm:"foreignKey:AutorID"` 
 	CreatedAt    time.Time
 	UpdatedAt    time.Time
+	// Soft Delete:
+	DeletedAt gorm.DeletedAt `gorm:"index"`
 }

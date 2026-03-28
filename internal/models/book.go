@@ -1,6 +1,9 @@
 package models
 
-import "time"
+import (
+	"time"
+	"gorm.io/gorm"
+)
 
 type Livro struct {
 	ID        uint      `gorm:"primaryKey;autoIncrement"`
@@ -15,4 +18,9 @@ type Livro struct {
 	Publicado bool      `gorm:"default:false"`
 	CreatedAt time.Time
 	UpdatedAt time.Time
+	// Soft Delete
+	DeletedAt gorm.DeletedAt `gorm:"index"`
 }
+
+// Exemplo de busca para caso queira ver os itens que sofreram soft delete
+// r.db.Unscoped().Find(&livros)

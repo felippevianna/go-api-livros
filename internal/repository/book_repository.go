@@ -13,6 +13,7 @@ type LivroRepository interface {
 	FindByID(id uint) (*models.Livro, error)
 	Update(livro *models.Livro) error
 	Delete(id uint) error
+	Search(titulo string, autorID uint) ([]models.Livro, error)
 }
 
 // livroRepository é a implementação da interface LivroRepository.
@@ -46,10 +47,32 @@ func (r *livroRepository) FindByID(id uint) (*models.Livro, error) {
 	return &livro, nil
 }
 
-func (r *livroRepository) Update(livro *models.Livro) error {
-	return r.db.Save(livro).Error
-}
-
 func (r *livroRepository) Delete(id uint) error {
 	return r.db.Delete(&models.Livro{}, id).Error
+}
+
+func (r *livroRepository) Update(livro *models.Livro) error {
+	// O Save atualiza todos os campos do modelo baseado no ID
+	// Se preferir atualizar apenas campos preenchidos, usamos .Updates()
+	return r.db.Model(&models.Livro{}).Where("id = ?", livro.ID).Updates(livro).Error
+}
+
+func (r *livroRepository) Search(titulo string, autorID uint) ([]models.Livro, error) {
+    var livros []models.Livro
+    query := r.db.Preload("Autor") // Já começamos com o Preload para trazer o autor
+
+    // Se o título não estiver vazio, adiciona filtro ILIKE (case-insensitive no Postgres)
+    if titulo != "" {
+        // O % significa "qualquer coisa antes ou depois"
+        query = query.Where("titulo ILIKE ?", "%"+titulo+"%")
+    }
+
+    // Se o autorID for maior que zero, filtra por ele
+    if autorID > 0 {
+        query = query.Where("autor_id = ?", autorID)
+    }
+
+    // Executa a query final
+    err := query.Find(&livros).Error
+    return livros, err
 }

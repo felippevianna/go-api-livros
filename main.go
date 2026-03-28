@@ -33,6 +33,8 @@ func main() {
 	r.GET("/books", bookHandler.GetBooks)
 	r.GET("/books/:id", bookHandler.GetBookByID)
 	r.DELETE("/books/:id", bookHandler.DeleteBook)
+	r.PUT("/books/:id", bookHandler.UpdateBook)
+	r.GET("/books/search", bookHandler.SearchBooks)
 
 	// Roda o servidor
 	err := r.Run(":8080")

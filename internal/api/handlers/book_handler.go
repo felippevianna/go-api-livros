@@ -12,12 +12,10 @@ type BookHandler struct {
 	repo repository.LivroRepository
 }
 
-// NewBookHandler cria uma nova instância do handler injetando o repositório
 func NewBookHandler(repo repository.LivroRepository) *BookHandler {
 	return &BookHandler{repo: repo}
 }
 
-// CreateBook lida com a requisição POST para criar um livro
 func (h *BookHandler) CreateBook(c *gin.Context) {
 	var livro models.Livro
 
@@ -37,7 +35,6 @@ func (h *BookHandler) CreateBook(c *gin.Context) {
 	c.JSON(http.StatusCreated, livro)
 }
 
-// GetBooks lida com a requisição GET para listar todos os livros
 func (h *BookHandler) GetBooks(c *gin.Context) {
 	livros, err := h.repo.FindAll()
 	if err != nil {
@@ -84,4 +81,54 @@ func (h *BookHandler) DeleteBook(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, gin.H{"message": "Livro removido com sucesso"})
+}
+
+func (h *BookHandler) UpdateBook(c *gin.Context) {
+	idStr := c.Param("id")
+	id, err := strconv.ParseUint(idStr, 10, 32)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "ID inválido"})
+		return
+	}
+
+	var livro models.Livro
+	// Pegamos os novos dados do corpo da requisição
+	if err := c.ShouldBindJSON(&livro); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	livro.ID = uint(id) // Garantimos que o ID da struct seja o da URL
+
+	if err := h.repo.Update(&livro); err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Erro ao atualizar livro"})
+		return
+	}
+
+	c.JSON(http.StatusOK, livro)
+}
+
+func (h *BookHandler) SearchBooks(c *gin.Context) {
+    // Captura os parâmetros da URL
+    titulo := c.Query("titulo")
+    autorIDStr := c.Query("autor_id")
+
+    var autorID uint64
+    if autorIDStr != "" {
+        var err error
+        autorID, err = strconv.ParseUint(autorIDStr, 10, 32)
+        if err != nil {
+            c.JSON(http.StatusBadRequest, gin.H{"error": "ID do autor inválido"})
+            return
+        }
+    }
+
+    // Chama o método do repositório
+    livros, err := h.repo.Search(titulo, uint(autorID))
+    if err != nil {
+        c.JSON(http.StatusInternalServerError, gin.H{"error": "Erro ao buscar livros"})
+        return
+    }
+
+    c.JSON(http.StatusOK, livros)
 }

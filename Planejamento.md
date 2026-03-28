@@ -5,11 +5,11 @@ Este documento lista as próximas funcionalidades e melhorias técnicas planejad
 ---
 
 ## 🛠 Fase 1: Finalização do Core CRUD
-- [ ] **Implementar Update (PUT/PATCH):** Permitir a edição de informações de um livro (ex: mudar status de leitura ou corrigir título).
-- [ ] **Soft Delete:** Alterar a exclusão física para exclusão lógica (preservando dados no banco com um campo `deleted_at`).
+- [x] **Implementar Update (PUT/PATCH):** Permitir a edição de informações de um livro (ex: mudar status de leitura ou corrigir título).
+- [x] **Soft Delete:** Alterar a exclusão física para exclusão lógica (preservando dados no banco com um campo `deleted_at`).
 
 ## 📊 Fase 2: Relacionamentos e Complexidade de Dados
-- [ ] **Entidade de Autores:** Criar uma tabela própria para `Autores` e relacioná-la com `Livros` (Um autor tem muitos livros).
+- [x] **Entidade de Autores:** Criar uma tabela própria para `Autores` e relacioná-la com `Livros` (Um autor tem muitos livros).
 - [ ] **Categorias/Gêneros:** Implementar um relacionamento de muitos-para-muitos (`Many-to-Many`) para categorias (Ficção, Terror, Biografia).
 - [ ] **Avaliações e Resenhas:** Permitir que usuários deem notas (1-5 estrelas) e escrevam comentários sobre os livros.
 
