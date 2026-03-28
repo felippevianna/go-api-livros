@@ -20,6 +20,8 @@ type Livro struct {
 	UpdatedAt time.Time
 	// Soft Delete
 	DeletedAt gorm.DeletedAt `gorm:"index"`
+
+	Categorias []Categoria `gorm:"many2many:livro_categorias;"`
 }
 
 // Exemplo de busca para caso queira ver os itens que sofreram soft delete

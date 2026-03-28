@@ -8,6 +8,13 @@ import (
 	"strconv" // Necessário para converter string para int
 )
 
+type CreateBookRequest struct {
+	Titulo       string `json:"titulo" binding:"required"`
+	Descricao    string `json:"descricao"`
+	AutorID      uint   `json:"autor_id" binding:"required"`
+	CategoriaIDs []uint `json:"categoria_ids"`
+}
+
 type BookHandler struct {
 	repo repository.LivroRepository
 }
@@ -17,21 +24,23 @@ func NewBookHandler(repo repository.LivroRepository) *BookHandler {
 }
 
 func (h *BookHandler) CreateBook(c *gin.Context) {
-	var livro models.Livro
-
-	// Faz o "Bind" do JSON que vem no corpo da requisição para a struct Livro
-	if err := c.ShouldBindJSON(&livro); err != nil {
+	var req CreateBookRequest
+	if err := c.ShouldBindJSON(&req); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
-	// Chama o repositório para salvar no banco de dados
-	if err := h.repo.Create(&livro); err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "Erro ao salvar livro"})
+	livro := models.Livro{
+		Titulo:    req.Titulo,
+		Descricao: req.Descricao,
+		AutorID:   req.AutorID,
+	}
+
+	if err := h.repo.CreateWithCategories(&livro, req.CategoriaIDs); err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Erro ao salvar livro e categorias"})
 		return
 	}
 
-	// Retorna o livro criado com status 201 (Created)
 	c.JSON(http.StatusCreated, livro)
 }
 

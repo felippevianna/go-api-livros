@@ -14,6 +14,7 @@ type LivroRepository interface {
 	Update(livro *models.Livro) error
 	Delete(id uint) error
 	Search(titulo string, autorID uint) ([]models.Livro, error)
+	CreateWithCategories(livro *models.Livro, categoriaIDs []uint) error
 }
 
 // livroRepository é a implementação da interface LivroRepository.
@@ -33,7 +34,7 @@ func (r *livroRepository) Create(livro *models.Livro) error {
 func (r *livroRepository) FindAll() ([]models.Livro, error) {
 	var livros []models.Livro
 	// O nome dentro do Preload deve ser EXATAMENTE o nome do campo na struct Livro
-	err := r.db.Preload("Autor").Find(&livros).Error
+	err := r.db.Preload("Autor").Preload("Categorias").Find(&livros).Error
 	return livros, err
 }
 
@@ -75,4 +76,16 @@ func (r *livroRepository) Search(titulo string, autorID uint) ([]models.Livro, e
     // Executa a query final
     err := query.Find(&livros).Error
     return livros, err
+}
+
+func (r *livroRepository) CreateWithCategories(livro *models.Livro, categoriaIDs []uint) error {
+	// Se houver IDs de categorias, o GORM busca e associa automaticamente
+	if len(categoriaIDs) > 0 {
+		var categorias []models.Categoria
+		if err := r.db.Find(&categorias, categoriaIDs).Error; err != nil {
+			return err
+		}
+		livro.Categorias = categorias
+	}
+	return r.db.Create(livro).Error
 }
