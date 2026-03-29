@@ -6,6 +6,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/felippevianna/go-api-livros/config"
 	"github.com/felippevianna/go-api-livros/internal/api/handlers"
+	"github.com/felippevianna/go-api-livros/internal/api/middleware"
 	"github.com/felippevianna/go-api-livros/internal/repository"
 )
 
@@ -29,30 +30,36 @@ func main() {
 
 	// 4. Configura o Gin
 	r := gin.Default()
-
-	// Rotas de Autores
-	r.POST("/authors", authorHandler.CreateAuthor)
-	r.GET("/authors", authorHandler.GetAuthors)
-
-	// Rotas de Livros
-	r.POST("/books", bookHandler.CreateBook)
-	r.GET("/books", bookHandler.GetBooks)
-	r.GET("/books/:id", bookHandler.GetBookByID)
-	r.DELETE("/books/:id", bookHandler.DeleteBook)
-	r.PUT("/books/:id", bookHandler.UpdateBook)
-	r.GET("/books/search", bookHandler.SearchBooks)
-
-	// Rotas de Categorias
-	r.POST("/categories", categoryHandler.CreateCategory)
-	r.GET("/categories", categoryHandler.GetCategories)
-
-	// Rotas de Avaliações
-	r.POST("/reviews", reviewHandler.CreateReview)
-	r.GET("/books/:id/reviews", reviewHandler.GetReviewsByBook)
-
+	
+	r.GET("/books", bookHandler.GetBooks)	
+	
 	// Rotas de Usuários
 	r.POST("/users", userHandler.CreateUser)
 	r.POST("/login", userHandler.Login)
+	
+	protected := r.Group("/")
+	protected.Use(middleware.AuthMiddleware())
+	{
+		// Rotas de Categorias
+		protected.POST("/categories", categoryHandler.CreateCategory)
+		protected.GET("/categories", categoryHandler.GetCategories)
+
+		// Rotas de Autores
+		protected.POST("/authors", authorHandler.CreateAuthor)
+		protected.GET("/authors", authorHandler.GetAuthors)
+
+		// Rotas de Livros
+		protected.POST("/books", bookHandler.CreateBook)
+		protected.GET("/books/:id", bookHandler.GetBookByID)
+		protected.DELETE("/books/:id", bookHandler.DeleteBook)
+		protected.PUT("/books/:id", bookHandler.UpdateBook)
+		protected.GET("/books/search", bookHandler.SearchBooks)
+
+		// Rotas de Avaliações
+		protected.POST("/reviews", reviewHandler.CreateReview)
+		protected.GET("/books/:id/reviews", reviewHandler.GetReviewsByBook)
+		
+	}
 
 	// Roda o servidor
 	err := r.Run(":8080")
