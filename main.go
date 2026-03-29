@@ -17,11 +17,13 @@ func main() {
 	livroRepo := repository.NewLivroRepository(db)
 	authorRepo := repository.NewAuthorRepository(db)
 	categoriaRepo := repository.NewCategoriaRepository(db)
-
+	avaliacaoRepo := repository.NewAvaliacaoRepository(db)
+	
 	// 3. Instancia o handler passando o repositório (Injeção de Dependência)
 	bookHandler := handlers.NewBookHandler(livroRepo)
 	authorHandler := handlers.NewAuthorHandler(authorRepo)
 	categoryHandler := handlers.NewCategoriaHandler(categoriaRepo)
+	reviewHandler := handlers.NewAvaliacaoHandler(avaliacaoRepo)
 
 	// 4. Configura o Gin
 	r := gin.Default()
@@ -41,6 +43,10 @@ func main() {
 	// Rotas de Categorias
 	r.POST("/categories", categoryHandler.CreateCategory)
 	r.GET("/categories", categoryHandler.GetCategories)
+
+	// Rotas de Avaliações
+	r.POST("/reviews", reviewHandler.CreateReview)
+	r.GET("/books/:id/reviews", reviewHandler.GetReviewsByBook)
 
 	// Roda o servidor
 	err := r.Run(":8080")

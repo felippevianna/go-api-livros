@@ -22,6 +22,7 @@ type Livro struct {
 	DeletedAt gorm.DeletedAt `gorm:"index"`
 
 	Categorias []Categoria `gorm:"many2many:livro_categorias;"`
+	Avaliacoes []Avaliacao `gorm:"foreignKey:LivroID"`
 }
 
 // Exemplo de busca para caso queira ver os itens que sofreram soft delete
