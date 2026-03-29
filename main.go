@@ -20,6 +20,7 @@ func main() {
 	categoriaRepo := repository.NewCategoriaRepository(db)
 	avaliacaoRepo := repository.NewAvaliacaoRepository(db)
 	userRepo := repository.NewUserRepository(db)
+	shelfRepo := repository.NewShelfRepository(db)
 	
 	// 3. Instancia o handler passando o repositório (Injeção de Dependência)
 	bookHandler := handlers.NewBookHandler(livroRepo)
@@ -27,6 +28,8 @@ func main() {
 	categoryHandler := handlers.NewCategoriaHandler(categoriaRepo)
 	reviewHandler := handlers.NewAvaliacaoHandler(avaliacaoRepo)
 	userHandler := handlers.NewUserHandler(userRepo)
+	shelfHandler := handlers.NewShelfHandler(shelfRepo)
+
 
 	// 4. Configura o Gin
 	r := gin.Default()
@@ -58,6 +61,12 @@ func main() {
 		// Rotas de Avaliações
 		protected.POST("/reviews", reviewHandler.CreateReview)
 		protected.GET("/books/:id/reviews", reviewHandler.GetReviewsByBook)
+
+		// Rotas de Estante
+		protected.POST("/my-shelf", shelfHandler.AddToShelf)
+   		protected.GET("/my-shelf", shelfHandler.GetMyShelf)
+		// :id aqui é o ID do registro na tabela 'shelves', não do livro
+		protected.PATCH("/my-shelf/:id", shelfHandler.UpdateShelfStatus)
 		
 	}
 

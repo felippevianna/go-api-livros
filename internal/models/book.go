@@ -14,6 +14,9 @@ type Livro struct {
 	AutorID   uint      `gorm:"not null"`
 	// Propriedade de navegação: Permite ao GORM carregar os dados do Autor automaticamente
 	Autor     Author     `gorm:"constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"`
+
+	UserID	uint      `gorm:"not null"`
+	User User	  `gorm:"constraint:OnUpdate:CASCADE,OnDelete:SET NULL;" json:"-"`
 	
 	Publicado bool      `gorm:"default:false"`
 	CreatedAt time.Time

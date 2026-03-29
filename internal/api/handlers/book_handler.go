@@ -24,6 +24,8 @@ func NewBookHandler(repo repository.LivroRepository) *BookHandler {
 }
 
 func (h *BookHandler) CreateBook(c *gin.Context) {
+	userId, _ := c.Get("userID")
+	
 	var req CreateBookRequest
 	if err := c.ShouldBindJSON(&req); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
@@ -34,6 +36,7 @@ func (h *BookHandler) CreateBook(c *gin.Context) {
 		Titulo:    req.Titulo,
 		Descricao: req.Descricao,
 		AutorID:   req.AutorID,
+		UserID:    userId.(uint), 
 	}
 
 	if err := h.repo.CreateWithCategories(&livro, req.CategoriaIDs); err != nil {
