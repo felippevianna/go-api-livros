@@ -34,3 +34,4 @@ Este documento lista as próximas funcionalidades e melhorias técnicas planejad
 - [ ] **Cálculo de Médias (Aggregates):** Criar um endpoint ou campo calculado que retorne a nota média de um livro baseada nas avaliações.
 - [ ] **Tratamento Global de Erros:** Criar um middleware para padronizar as respostas de erro da API, evitando repetição de código nos Handlers.
 - [ ] **Validações Customizadas:** Utilizar a biblioteca `validator/v10` para garantir regras de negócio direto nas structs (ex: impedir notas maiores que 5 ou títulos vazios).
+- [ ] **DTOs para Cadastro e Login:** 

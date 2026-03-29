@@ -6,7 +6,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/felippevianna/go-api-livros/config"
 	"github.com/felippevianna/go-api-livros/internal/api/handlers"
-	"github.com/felippevianna/go-api-livros/internal/repository" // Importação necessária
+	"github.com/felippevianna/go-api-livros/internal/repository"
 )
 
 func main() {
@@ -18,12 +18,14 @@ func main() {
 	authorRepo := repository.NewAuthorRepository(db)
 	categoriaRepo := repository.NewCategoriaRepository(db)
 	avaliacaoRepo := repository.NewAvaliacaoRepository(db)
+	userRepo := repository.NewUserRepository(db)
 	
 	// 3. Instancia o handler passando o repositório (Injeção de Dependência)
 	bookHandler := handlers.NewBookHandler(livroRepo)
 	authorHandler := handlers.NewAuthorHandler(authorRepo)
 	categoryHandler := handlers.NewCategoriaHandler(categoriaRepo)
 	reviewHandler := handlers.NewAvaliacaoHandler(avaliacaoRepo)
+	userHandler := handlers.NewUserHandler(userRepo)
 
 	// 4. Configura o Gin
 	r := gin.Default()
@@ -47,6 +49,10 @@ func main() {
 	// Rotas de Avaliações
 	r.POST("/reviews", reviewHandler.CreateReview)
 	r.GET("/books/:id/reviews", reviewHandler.GetReviewsByBook)
+
+	// Rotas de Usuários
+	r.POST("/users", userHandler.CreateUser)
+	r.POST("/login", userHandler.Login)
 
 	// Roda o servidor
 	err := r.Run(":8080")

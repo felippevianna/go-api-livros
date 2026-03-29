@@ -32,7 +32,12 @@ func SetupDatabase() *gorm.DB {
 
 	// Migra o esquema do banco de dados para criar a tabela de Livros
 	// Isso é fundamental para que o GORM crie a tabela baseada na sua struct
-	err = dbConnection.AutoMigrate(&models.Livro{}, &models.Author{}, &models.Categoria{}, &models.Avaliacao{})
+	err = dbConnection.AutoMigrate(&models.Livro{}, 
+		&models.Author{}, 
+		&models.Categoria{}, 
+		&models.Avaliacao{}, 
+		&models.User{}, 
+		&models.Shelf{})
 
 	if err != nil {
 		log.Fatalf("Erro ao migrar o esquema do banco de dados: %v", err)
