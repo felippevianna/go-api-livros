@@ -3,11 +3,11 @@ package main
 import (
 	"log"
 
-	"github.com/gin-gonic/gin"
 	"github.com/felippevianna/go-api-livros/config"
 	"github.com/felippevianna/go-api-livros/internal/api/handlers"
 	"github.com/felippevianna/go-api-livros/internal/api/middleware"
 	"github.com/felippevianna/go-api-livros/internal/repository"
+	"github.com/gin-gonic/gin"
 )
 
 func main() {
@@ -21,7 +21,7 @@ func main() {
 	avaliacaoRepo := repository.NewAvaliacaoRepository(db)
 	userRepo := repository.NewUserRepository(db)
 	shelfRepo := repository.NewShelfRepository(db)
-	
+
 	// 3. Instancia o handler passando o repositório (Injeção de Dependência)
 	bookHandler := handlers.NewBookHandler(livroRepo)
 	authorHandler := handlers.NewAuthorHandler(authorRepo)
@@ -30,16 +30,17 @@ func main() {
 	userHandler := handlers.NewUserHandler(userRepo)
 	shelfHandler := handlers.NewShelfHandler(shelfRepo)
 
-
 	// 4. Configura o Gin
 	r := gin.Default()
-	
-	r.GET("/books", bookHandler.GetBooks)	
-	
+
+	// Rotas Públicas
+	r.GET("/books", bookHandler.GetBooks)
+	r.GET("/books/googlesearch", bookHandler.SearchBooksGoogleApi)
+
 	// Rotas de Usuários
 	r.POST("/users", userHandler.CreateUser)
 	r.POST("/login", userHandler.Login)
-	
+
 	protected := r.Group("/")
 	protected.Use(middleware.AuthMiddleware())
 	{
@@ -64,10 +65,10 @@ func main() {
 
 		// Rotas de Estante
 		protected.POST("/my-shelf", shelfHandler.AddToShelf)
-   		protected.GET("/my-shelf", shelfHandler.GetMyShelf)
+		protected.GET("/my-shelf", shelfHandler.GetMyShelf)
 		// :id aqui é o ID do registro na tabela 'shelves', não do livro
 		protected.PATCH("/my-shelf/:id", shelfHandler.UpdateShelfStatus)
-		
+
 	}
 
 	// Roda o servidor

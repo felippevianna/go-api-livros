@@ -35,3 +35,13 @@ Este documento lista as próximas funcionalidades e melhorias técnicas planejad
 - [ ] **Tratamento Global de Erros:** Criar um middleware para padronizar as respostas de erro da API, evitando repetição de código nos Handlers.
 - [ ] **Validações Customizadas:** Utilizar a biblioteca `validator/v10` para garantir regras de negócio direto nas structs (ex: impedir notas maiores que 5 ou títulos vazios).
 - [ ] **DTOs para Cadastro e Login:** 
+
+## 📡 Fase 7: Mensageria e Arquitetura de Eventos (Novo 🚀)
+- [ ] **Infraestrutura Kafka:** Configuração de Broker e Zookeeper no Docker.
+- [ ] **Eventos de Estante:** Disparar evento ao finalizar um livro (`StatusLido`).
+- [ ] **Micro-serviço de Notificação:** Consumer que processa eventos e simula envio de e-mails/badges.
+- [ ] **Logs de Auditoria:** Rastreamento assíncrono de atividades críticas via Kafka.
+
+## 🧪 Fase 8: Qualidade e Operação
+- [ ] **Testes Unitários:** Cobertura de lógica em Services e Repositories.
+- [ ] **Logs Estruturados:** Implementação de `zap` ou `zerolog` para monitoramento.

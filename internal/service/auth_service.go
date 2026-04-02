@@ -2,6 +2,7 @@ package service
 
 import (
 	"time"
+
 	"github.com/golang-jwt/jwt/v5"
 )
 
@@ -11,7 +12,7 @@ var secretKey = []byte("chave_secreta_super_segura")
 func GenerateToken(userID uint) (string, error) {
 	claims := jwt.MapClaims{
 		"sub": userID,
-		"exp": time.Now().Add(time.Hour * 24).Unix(), // Expira em 24h
+		"exp": time.Now().Add(time.Hour * 24).Unix(),
 		"iat": time.Now().Unix(),
 	}
 

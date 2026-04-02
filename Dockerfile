@@ -19,6 +19,9 @@
 
 FROM golang:1.25.1 AS builder
 
+# Se sua imagem for golang:1.21 (sem o sufixo -alpine)
+RUN apt-get update && apt-get install -y ca-certificates git && rm -rf /var/lib/apt/lists/*
+
 WORKDIR /app
 COPY . .
 # comando para instalar as dependencias do projeto
@@ -26,6 +29,8 @@ RUN go mod tidy
 RUN go build -o main .
 
 FROM debian:bookworm-slim
+RUN apt-get update && apt-get install -y ca-certificates && rm -rf /var/lib/apt/lists/*
+
 WORKDIR /app
 COPY --from=builder /app/main .
 CMD ["./main"]
